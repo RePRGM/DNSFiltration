@@ -1,6 +1,7 @@
 import subprocess
 import ipaddress
 import argparse
+import random
 
 def run_nslookup(ip):
     try:
