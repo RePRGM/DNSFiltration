@@ -21,13 +21,19 @@ def scan_ip_range(start_ip, end_ip, keyword, output_file=None):
 
     matches = []
 
-    for ip in range(int(start), int(end) + 1):
-        ip_str = str(ipaddress.IPv4Address(ip))
+    # Generate and shuffle IPs
+    ip_list = [ipaddress.IPv4Address(ip) for ip in range(int(start), int(end) + 1)]
+    random.shuffle(ip_list)
+
+    for ip_obj in ip_list:
+        ip_str = str(ip_obj)
         print(f"\rScanning {ip_str}...", end="", flush=True)
         output = run_nslookup(ip_str)
         if keyword.lower() in output.lower():
-            print(f"✔ Match found: {ip_str}")
+            print(f"\r✔ Match found: {ip_str}{' ' * 20}")
             matches.append(f"{ip_str}\n{output}\n")
+
+    print("\rScanning complete.              ")
 
     if output_file:
         with open(output_file, "w") as f:
